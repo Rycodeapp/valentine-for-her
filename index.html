@@ -192,7 +192,7 @@
             </p>
             <div class="opacity-60 hover:opacity-100 transition-opacity">
                 <p class="font-handwriting text-xl text-gray-400">Gửi chúng ta của năm 2027,</p>
-                <p class="text-xs text-gray-400">Nếu em đang đọc lại dòng này vào năm sau, hy vọng lúc đó anh vẫn đang nắm tay em.</p>
+                <p class="text-xs text-gray-400" id="secret-trigger">Nếu em đang đọc lại dòng này vào năm sau, hy vọng lúc đó anh vẫn đang nắm tay em.</p>
             </div>
         </div>
 
@@ -379,6 +379,26 @@ Và cả những ngày sau nữa. ❤️`;
             }
         }
 
+        let pressTimer;
+        
+        const secret = document.getElementById("secret-trigger");
+        
+        secret.addEventListener("touchstart", function () {
+            pressTimer = setTimeout(showSecret, 800);
+        });
+        
+        secret.addEventListener("touchend", function () {
+            clearTimeout(pressTimer);
+        });
+        
+        function showSecret() {
+            Swal.fire({
+                title: 'Bí mật nè! 🤫',
+                text: 'Anh yêu em nhiều hơn cả trà sữa full topping hẹ hẹ love u~',
+                confirmButtonColor: '#ec4899'
+            });
+        }
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'l' || event.key === 'L') {
                 Swal.fire({
@@ -391,13 +411,13 @@ Và cả những ngày sau nữa. ❤️`;
                     confirmButtonText: 'Hihi yêu anh ❤️',
                     confirmButtonColor: '#ec4899',
                     background: '#fff1f2',
-                    backdrop: `rgba(0,0,123,0.4) url("https://sweetalert2.github.io/images/nyan-ca.gif") left top no-repeat`
+                    backdrop: `rgba(0,0,123,0.4) url("https://sweetalert2.github.io/images/nyan-ca.gi") left top no-repeat`
                 });
             }
         });
         document.addEventListener("DOMContentLoaded", () => {
             const audio = document.getElementById("bg-music");
-            audio.volume = 0.4; // 40% cho dịu
+            audio.volume = 0.4;
         });
 
         function createHeartRain() {
@@ -529,6 +549,7 @@ Và cả những ngày sau nữa. ❤️`;
     </script>
 </body>
 </html>
+
 
 
 
