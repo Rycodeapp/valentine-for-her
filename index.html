@@ -129,6 +129,9 @@
                     <span id="days" class="block text-3xl font-bold text-red-500">0</span>
                     <span class="text-xs text-gray-500 uppercase">Ngày</span>
                 </div>
+
+                <div id="loveTime"></div>
+                
                 <div class="bg-white/50 p-3 rounded-xl w-20">
                     <span id="hours" class="block text-3xl font-bold text-pink-500">0</span>
                     <span class="text-xs text-gray-500 uppercase">Giờ</span>
@@ -210,28 +213,44 @@
     </div>
 
     <script>
-        const startDate = new Date(2023, 1, 14); 
+        const startDate = new Date(2025, 6, 3);
         
-        const letterText = `Có những ngày bình thường trôi qua rất nhanh.\n
-Nhưng từ khi có em, anh bắt đầu để ý nhiều hơn đến từng khoảnh khắc.\n
-Anh nhớ cách em cười khi vui.
-Nhớ cả lúc em giả vờ giận nhưng mắt vẫn mềm.\n
+        const letterText = `Những ngày bình thường thường trôi qua rất nhanh...\n
+Nhưng từ khi có em, anh đã cảm thấy và quan sát nhìu hơn..\n
+Anh nhớ cách em cười khi vui (tuy là toàn cố nín thoii).
+Nhớ cả lúc em dỗi hờn vu vơ (hyhy dthw chít mất).\n
 Anh không hứa sẽ không làm em buồn.
-Nhưng anh hứa nếu có làm em buồn,
-anh sẽ là người đầu tiên ở đó để ôm em.\n
+Nhưng anh hứa nếu lỡ có làm em buồn @@,
+anh sẽ là người đầu tiên ở đó để ôm em..\n
 Valentine này,
 anh không cần gì lớn lao.
 Chỉ cần em vẫn ở đây,
 và cho anh cơ hội được yêu em mỗi ngày.\n
 Anh chọn em.
-Hôm nay.
+Hôm nay...
 Và cả những ngày sau nữa. ❤️`;
 
-        const memories = [
-            { url: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Nụ cười tỏa nắng" },
-            { url: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Lần đầu đi du lịch" },
-            { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Bình yên bên em" }
-        ];
+        const memories = [];
+        memories.push(
+            {
+                url: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Nụ cười tỏa nắng"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Khoảnh khắc anh không bao giờ quên"
+            },
+            {
+                url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                caption: "Bình yên bên em"
+            }
+        );
+        for (let i = 4; i <= 32; i++) {
+            memories.push({
+                url: `img3 (${i}).jpg`,
+                caption: `Khoảnh khắc ${i} của tụi mình 💞`
+            });
+        }
 
         let currentImageIndex = 0;
         let isTyping = false;
@@ -408,6 +427,35 @@ Và cả những ngày sau nữa. ❤️`;
         }
         setInterval(updateCounter, 1000);
         updateCounter();
+
+        function updateLoveTime() {
+            const startDate = new Date(2025, 6, 3);
+            const now = new Date();
+
+            let years = now.getFullYear() - startDate.getFullYear();
+            let months = now.getMonth() - startDate.getMonth();
+            let days = now.getDate() - startDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            document.getElementById("loveTime").innerHTML =
+                `💞 Từ ngày 03.07.2025 đến hôm nay...<br>
+                <strong>${years} năm ${months} tháng ${days} ngày</strong><br>
+                và vẫn đang tiếp tục viết tiếp câu chuyện của chúng ta.`;
+
+        }
+
+        updateLoveTime();
+        setInterval(updateLoveTime, 86400000);
 
         function moveButton() {
             const btn = document.getElementById('no-btn');
