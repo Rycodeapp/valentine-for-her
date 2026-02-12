@@ -3,72 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi Người Anh Yêu</title>
-    <!-- Tailwind CSS -->
+    <title>Gửi Bảo Anh ❤️ - Valentine của anh</title>
+
+    <meta property="og:title" content="Bao Anh à, anh có điều bất ngờ cho em ❤️">
+    <meta property="og:description" content="Một món quà nhỏ anh làm riêng cho em nhân Valentine.">
+    <meta property="og:image" content="https://rycodeapp.github.io/valentine-for-her/preview.jpg">
+    <meta property="og:url" content="https://rycodeapp.github.io/valentine-for-her/">
+    <meta property="og:type" content="website">
+
+    <meta property="fb:app_id" content="">
+
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font chữ -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Hiệu ứng pháo hoa -->
+
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- SweetAlert2 cho Popup đẹp -->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     
     <style>
         body {
             font-family: 'Nunito', sans-serif;
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             overflow-x: hidden;
+            transition: background 1s ease;
+            /* THÊM: Đổi con trỏ chuột thành trái tim hồng */
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'><path fill='%23ec4899' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>") 14 14, auto;
         }
         
-        .font-handwriting {
-            font-family: 'Dancing Script', cursive;
+        /* Đảm bảo các nút bấm cũng giữ con trỏ trái tim nhưng có bóng mờ báo hiệu click được */
+        button, a, .cursor-pointer {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'><path fill='%23be185d' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>") 14 14, pointer !important;
+        }
+
+        .font-handwriting { font-family: 'Dancing Script', cursive; }
+
+        /* --- Vệt sao rơi rớt khi di chuột --- */
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 16px;
+            transform: translate(-50%, -50%);
+            animation: fadeTrail 0.8s ease-out forwards;
+        }
+        @keyframes fadeTrail {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, 50px) scale(0); opacity: 0; }
         }
 
         /* --- Hiệu ứng nền trái tim bay --- */
-        .heart-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .heart {
-            position: absolute; bottom: -100px;
-            background-color: rgba(255, 107, 129, 0.6);
-            display: inline-block; height: 30px; width: 30px;
-            margin: 0 10px; transform: rotate(-45deg);
-            animation: float 6s ease-in infinite;
-        }
-        .heart:before, .heart:after {
-            content: ""; background-color: inherit; border-radius: 50%;
-            height: 30px; position: absolute; width: 30px;
-        }
-        .heart:before { top: -15px; left: 0; }
-        .heart:after { left: 15px; top: 0; }
-        @keyframes float {
-            0% { transform: translateY(0) rotate(-45deg) scale(0.8); opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(-45deg) scale(1.2); opacity: 0; }
-        }
+        .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .heart { position: absolute; bottom: -100px; background-color: rgba(255, 107, 129, 0.6); display: inline-block; height: 30px; width: 30px; margin: 0 10px; transform: rotate(-45deg); animation: float 6s ease-in infinite; }
+        .heart:before, .heart:after { content: ""; background-color: inherit; border-radius: 50%; height: 30px; position: absolute; width: 30px; }
+        .heart:before { top: -15px; left: 0; } .heart:after { left: 15px; top: 0; }
+        @keyframes float { 0% { transform: translateY(0) rotate(-45deg) scale(0.8); opacity: 1; } 100% { transform: translateY(-120vh) rotate(-45deg) scale(1.2); opacity: 0; } }
 
         /* --- Hiệu ứng Intro --- */
-        @keyframes heartbeat {
-            0% { transform: scale(1); } 14% { transform: scale(1.1); }
-            28% { transform: scale(1); } 42% { transform: scale(1.1); }
-            70% { transform: scale(1); }
-        }
+        @keyframes heartbeat { 0% { transform: scale(1); } 14% { transform: scale(1.1); } 28% { transform: scale(1); } 42% { transform: scale(1.1); } 70% { transform: scale(1); } }
         .animate-heartbeat { animation: heartbeat 1.5s infinite; }
-        
-        .zoom-in-transition {
-            transform: scale(30);
-            opacity: 0;
-            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s ease 1s;
-        }
+        .zoom-in-transition { transform: scale(30); opacity: 0; transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s ease 1s; }
 
         /* --- Glassmorphism --- */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
 
         .hidden-content { display: none; opacity: 0; transform: translateY(50px); transition: all 1s ease-out; }
         .show-content { display: block; opacity: 1; transform: translateY(0); }
@@ -80,31 +80,32 @@
         .dot.active { background-color: #ef4444; width: 30px; transform: scale(1.1); }
 
         /* --- Typing Effect Cursor --- */
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-start infinite;
-            color: #ec4899;
-        }
+        .typing-cursor::after { content: '|'; animation: blink 1s step-start infinite; color: #ec4899; }
         @keyframes blink { 50% { opacity: 0; } }
 
         /* --- Music Control --- */
-        .music-control {
-            animation: spin 4s linear infinite;
-        }
+        .music-control { animation: spin 4s linear infinite; }
         .paused { animation-play-state: paused; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- Voucher Flip Effect --- */
+        .coupon-card {
+            transition: transform 0.3s, filter 0.3s;
+        }
+        .coupon-card.claimed {
+            transform: scale(0.95);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-pink-100 via-purple-100 to-red-100 min-h-screen relative text-gray-800">
 
-    <!-- Nền trái tim bay -->
     <div class="heart-bg" id="heart-bg"></div>
 
     <!-- Màn hình 1: Intro Envelope -->
     <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pink-50 transition-all duration-1000 overflow-hidden">
         <div class="text-center cursor-pointer relative z-10" onclick="startJourney()">
             <div id="intro-heart" class="relative w-32 h-32 mx-auto mb-8 animate-heartbeat transition-transform duration-1000">
-                <!-- Icon trái tim SVG -->
                 <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-red-500 drop-shadow-xl filter">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
                 </svg>
@@ -115,9 +116,9 @@
         </div>
     </div>
 
-    <!-- Nút điều khiển nhạc (Fixed) -->
+    <!-- Nút điều khiển nhạc -->
     <div class="fixed top-4 right-4 z-40">
-        <button onclick="toggleMusic()" class="bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:shadow-xl transition-all border border-pink-200 group">
+        <button onclick="toggleMusic()" class="bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:shadow-xl transition-all border border-pink-200 group cursor-pointer">
             <div id="music-icon" class="text-2xl music-control paused">🎵</div>
             <span class="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-white px-2 py-1 rounded text-xs text-pink-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-sm">
                 Our Playlist 🎶
@@ -128,7 +129,6 @@
     <!-- Màn hình 2: Nội dung chính -->
     <div id="main-content" class="hidden-content container mx-auto px-4 py-8 relative z-10 max-w-2xl pb-32">
         
-        <!-- Header -->
         <header class="text-center mb-12 mt-8">
             <h1 class="font-handwriting text-5xl md:text-7xl text-red-500 mb-2 drop-shadow-sm">Happy Valentine's Day</h1>
             <p class="text-xl text-pink-600 font-semibold">Chào cô gái nhỏ của anh!</p>
@@ -150,45 +150,66 @@
             <p class="text-center mt-4 text-gray-500 italic text-sm">Từng giây từng phút đều quý giá ❤️</p>
         </div>
 
-        <!-- Carousel Ảnh -->
-        <div class="glass rounded-3xl p-4 mb-8 shadow-xl">
+        <!-- Carousel Ảnh (Đã thêm hiệu ứng Tilt 3D) -->
+        <!-- Thuộc tính data-tilt tự động kích hoạt thư viện vanilla-tilt -->
+        <div class="glass rounded-3xl p-4 mb-8 shadow-2xl" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.3">
             <div class="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden group bg-gray-100">
                 <div class="carousel-track" id="track"></div>
             </div>
             <div class="flex justify-center mt-4 gap-2" id="dots-container"></div>
         </div>
 
-        <!-- Bức thư tình (Typing Effect) -->
+        <!-- Bức thư tình -->
         <div class="bg-white rounded-xl shadow-2xl p-8 mb-12 relative transform rotate-1 hover:rotate-0 transition-transform duration-300 border-2 border-pink-100 min-h-[300px]">
             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-8 bg-gray-300 rounded-full shadow-inner"></div>
-            
-            <h3 class="font-handwriting text-3xl text-gray-800 mb-6">Gửi em... <span class="text-pink-400 text-xl">(Biệt danh của em)</span></h3>
-            
-            <!-- Nội dung thư sẽ được JS gõ vào đây -->
+            <h3 class="font-handwriting text-3xl text-gray-800 mb-6">Gửi em... <span class="text-pink-400 text-xl">(Biệt danh)</span></h3>
             <div id="letter-content" class="text-gray-600 leading-loose text-lg text-justify font-handwriting typing-cursor"></div>
-            
             <p class="text-right mt-6 font-bold text-gray-700 opacity-0 transition-opacity duration-1000" id="signature">- Anh của em -</p>
         </div>
 
         <!-- Khu vực tương tác -->
-        <div class="text-center mb-16">
+        <div class="text-center mb-8">
             <h3 class="text-gray-500 text-sm mb-2 uppercase tracking-widest">Câu hỏi quan trọng</h3>
             <h2 class="text-4xl font-handwriting text-pink-600 mb-8 animate-pulse">Em có yêu anh không? 🥺</h2>
 
-            <!-- GAME AREA: Container giới hạn khu vực chạy -->
-            <!-- Tăng chiều cao lên h-64 để có không gian chạy nhưng vẫn trong tầm mắt -->
             <div id="game-area" class="relative h-64 w-full flex justify-center items-center bg-pink-50/30 rounded-3xl border border-pink-100 overflow-hidden">
-                
-                <!-- Nút Yêu -->
-                <button onclick="acceptLove()" class="absolute z-10 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-110">
+                <button onclick="acceptLove()" class="absolute z-10 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-110 cursor-pointer">
                     Yêu Anh ❤️
                 </button>
-                
-                <!-- Nút Không (Sẽ chạy trong khu vực này) -->
-                <!-- Lúc đầu để margin-left để tách ra khỏi nút Yêu -->
-                <button id="no-btn" onmouseover="moveButton()" onclick="moveButton()" class="absolute z-20 bg-gray-300 text-gray-600 font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 ml-48">
+                <button id="no-btn" onmouseover="moveButton()" onclick="moveButton()" class="absolute z-20 bg-gray-300 text-gray-600 font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 ml-48 cursor-pointer">
                     Không thèm 😝
                 </button>
+            </div>
+        </div>
+
+        <!-- THÊM MỚI: Khu vực VOUCHER (Ẩn lúc đầu) -->
+        <div id="coupons-section" class="hidden-content mt-12 mb-16 px-2">
+            <div class="text-center mb-8">
+                <h3 class="font-handwriting text-5xl text-pink-600 drop-shadow-sm mb-2">Ví Voucher Của Em</h3>
+                <p class="text-gray-500 text-sm">Phần thưởng vì em đã chọn "Yêu Anh" 🎉 Bấm để nhận nhé!</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Voucher 1 -->
+                <div class="coupon-card glass p-6 rounded-2xl border-2 border-dashed border-pink-400 text-center cursor-pointer shadow-lg hover:shadow-pink-200" onclick="claimCoupon(this, 'Vé Trà Sữa')">
+                    <div class="text-5xl mb-3">🧋</div>
+                    <h4 class="font-bold text-gray-800 text-xl">Vé Trà Sữa</h4>
+                    <p class="text-sm text-gray-600 mt-2">Full topping, freeship tận giường bất cứ lúc nào.</p>
+                </div>
+                
+                <!-- Voucher 2 -->
+                <div class="coupon-card glass p-6 rounded-2xl border-2 border-dashed border-pink-400 text-center cursor-pointer shadow-lg hover:shadow-pink-200" onclick="claimCoupon(this, 'Vé Sai Vặt')">
+                    <div class="text-5xl mb-3">🧞‍♂️</div>
+                    <h4 class="font-bold text-gray-800 text-xl">Vé Sai Vặt</h4>
+                    <p class="text-sm text-gray-600 mt-2">Anh sẽ biến thành Thần Đèn làm mọi thứ em yêu cầu (Trong 1 ngày).</p>
+                </div>
+
+                <!-- Voucher 3 -->
+                <div class="coupon-card glass p-6 rounded-2xl border-2 border-dashed border-pink-400 text-center cursor-pointer shadow-lg hover:shadow-pink-200" onclick="claimCoupon(this, 'Vé Ôm Cực Mạnh')">
+                    <div class="text-5xl mb-3">🫂</div>
+                    <h4 class="font-bold text-gray-800 text-xl">Vé Chữa Lành</h4>
+                    <p class="text-sm text-gray-600 mt-2">1 cái ôm thật chặt và mua đồ ăn ngon cho em khi em dỗi.</p>
+                </div>
             </div>
         </div>
 
@@ -203,9 +224,7 @@
             </div>
         </div>
 
-        <!-- Music Player -->
         <audio id="bg-music" loop>
-            <!-- Thay link nhạc của 2 bạn vào đây -->
             <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         </audio>
 
@@ -213,16 +232,22 @@
 
     <!-- Script điều khiển -->
     <script>
-        // --- CẤU HÌNH DỮ LIỆU ---
-        const startDate = new Date(2023, 1, 14); // Ngày yêu nhau
+        const startDate = new Date(2023, 1, 14); 
         
-        // Nội dung thư (Dùng \n để xuống dòng)
-        const letterText = 
-`Chào em, cô gái đã đánh cắp trái tim anh.\n
-Nhân ngày Valentine, anh muốn nói rằng cảm ơn em vì đã xuất hiện. Anh nhớ lần đầu mình gặp nhau, nhớ cả cái cách em cười tít mắt khi được uống trà sữa.\n
-Anh không hứa sẽ là người hoàn hảo nhất, nhưng anh hứa sẽ là người luôn cố gắng để em cười mỗi ngày. 
-Mong rằng 365 ngày tới, ngày nào cũng là Valentine của chúng mình.\n
-Yêu em nhiều lắm! ❤️`;
+        const letterText = `Có những ngày bình thường trôi qua rất nhanh.\n
+Nhưng từ khi có em, anh bắt đầu để ý nhiều hơn đến từng khoảnh khắc.\n
+Anh nhớ cách em cười khi vui.
+Nhớ cả lúc em giả vờ giận nhưng mắt vẫn mềm.\n
+Anh không hứa sẽ không làm em buồn.
+Nhưng anh hứa nếu có làm em buồn,
+anh sẽ là người đầu tiên ở đó để ôm em.\n
+Valentine này,
+anh không cần gì lớn lao.
+Chỉ cần em vẫn ở đây,
+và cho anh cơ hội được yêu em mỗi ngày.\n
+Anh chọn em.
+Hôm nay.
+Và cả những ngày sau nữa. ❤️`;
 
         const memories = [
             { url: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Nụ cười tỏa nắng" },
@@ -232,9 +257,25 @@ Yêu em nhiều lắm! ❤️`;
 
         let currentImageIndex = 0;
         let isTyping = false;
-        let audioPlaying = false;
 
-        // --- INIT ---
+        // --- CUSTOM CURSOR TRAIL (Ý 2) ---
+        let lastTrailTime = 0;
+        document.addEventListener('mousemove', function(e) {
+            // Giới hạn tần suất tạo hạt (throttle) để mượt mà không lag
+            if (Date.now() - lastTrailTime > 50) {
+                let trail = document.createElement('div');
+                trail.className = 'cursor-trail';
+                trail.innerHTML = '✨'; // Icon nhũ lấp lánh
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                document.body.appendChild(trail);
+                
+                setTimeout(() => trail.remove(), 800);
+                lastTrailTime = Date.now();
+            }
+        });
+
+        // --- INIT CAROUSEL ---
         function initCarousel() {
             const track = document.getElementById('track');
             const dotsContainer = document.getElementById('dots-container');
@@ -251,7 +292,7 @@ Yêu em nhiều lắm! ❤️`;
                 track.appendChild(slide);
 
                 const dot = document.createElement('button');
-                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.className = `dot ${index === 0 ? 'active' : ''} cursor-pointer`;
                 dot.onclick = () => goToSlide(index);
                 dotsContainer.appendChild(dot);
             });
@@ -261,7 +302,7 @@ Yêu em nhiều lắm! ❤️`;
             currentImageIndex = index;
             document.getElementById('track').style.transform = `translateX(-${index * 100}%)`;
             document.querySelectorAll('.dot').forEach((dot, i) => {
-                dot.className = `dot ${i === index ? 'active' : ''}`;
+                dot.className = `dot ${i === index ? 'active' : ''} cursor-pointer`;
             });
         }
 
@@ -273,7 +314,6 @@ Yêu em nhiều lắm! ❤️`;
             const introScreen = document.getElementById('intro-screen');
             const main = document.getElementById('main-content');
 
-            // 1. Hiệu ứng Zoom In Intro
             introText.style.opacity = '0';
             introSub.style.opacity = '0';
             introHeart.classList.remove('animate-heartbeat');
@@ -288,75 +328,70 @@ Yêu em nhiều lắm! ❤️`;
                 fireConfetti();
                 createHeartRain();
                 
-                // Bắt đầu gõ thư sau khi vào màn hình chính 1 chút
                 setTimeout(typeWriter, 1000);
                 
-                // Auto play slide
                 setInterval(() => {
                     currentImageIndex = (currentImageIndex + 1) % memories.length;
                     goToSlide(currentImageIndex);
                 }, 3500);
                 
-                // Thử tự động phát nhạc (nếu trình duyệt cho phép)
                 toggleMusic(); 
-
             }, 1200);
         }
 
-        // --- TYPING EFFECT ---
         function typeWriter() {
             if (isTyping) return;
             isTyping = true;
             const container = document.getElementById('letter-content');
-            container.innerHTML = ""; // Xóa nội dung cũ
+            container.innerHTML = ""; 
             
             let i = 0;
-            const speed = 50; // Tốc độ gõ (ms)
-
             function type() {
                 if (i < letterText.length) {
-                    // Xử lý xuống dòng
-                    if (letterText.charAt(i) === '\n') {
+                    const char = letterText.charAt(i);
+                    if (char === '\n') {
                         container.innerHTML += '<br>';
                     } else {
-                        container.innerHTML += letterText.charAt(i);
+                        container.innerHTML += char;
                     }
+                    
+                    let delay = 50;
+                    if (char === '.' || char === '!' || char === '❤️') {
+                        delay = 400; 
+                    } else if (char === ',') {
+                        delay = 200; 
+                    }
+
                     i++;
-                    // Tự động cuộn xuống nếu văn bản dài
-                    // container.scrollTop = container.scrollHeight; 
-                    setTimeout(type, speed);
+                    setTimeout(type, delay);
                 } else {
-                    // Kết thúc gõ
                     document.getElementById('signature').style.opacity = '1';
-                    container.classList.remove('typing-cursor'); // Bỏ dấu nháy
+                    container.classList.remove('typing-cursor');
                 }
             }
             type();
         }
 
-        // --- MUSIC CONTROL ---
         function toggleMusic() {
             const audio = document.getElementById('bg-music');
             const icon = document.getElementById('music-icon');
             
-            if (audioPlaying) {
-                audio.pause();
-                icon.classList.add('paused');
-                icon.innerText = '🔇'; // Icon tắt tiếng
-            } else {
+            if (audio.paused) {
                 audio.play().then(() => {
                     icon.classList.remove('paused');
                     icon.innerText = '🎵';
-                    audioPlaying = true;
                 }).catch(err => {
-                    console.log("Autoplay blocked, waiting for user interaction");
-                    icon.innerText = '🔇'; // Hiện trạng thái tắt nếu bị chặn
+                    console.log("Autoplay blocked");
+                    icon.innerText = '🔇'; 
                 });
+            } else {
+                audio.pause();
+                icon.classList.add('paused');
+                icon.innerText = '🔇';
             }
-            audioPlaying = !audioPlaying;
         }
 
-        // --- EASTER EGG (Phím L) ---
+        // EASTER EGG
         document.addEventListener('keydown', function(event) {
             if (event.key === 'l' || event.key === 'L') {
                 Swal.fire({
@@ -374,7 +409,6 @@ Yêu em nhiều lắm! ❤️`;
             }
         });
 
-        // --- UTILS ---
         function createHeartRain() {
             const container = document.getElementById('heart-bg');
             setInterval(() => {
@@ -404,39 +438,76 @@ Yêu em nhiều lắm! ❤️`;
             const btn = document.getElementById('no-btn');
             const gameArea = document.getElementById('game-area');
             
-            // Xóa margin-left ban đầu để di chuyển tự do
+            const trollTexts = ["Không 😝", "Hongggg", "Khỏi nhaaa", "Không đâu 😆", "Mơ đii"];
+            btn.innerText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
+            
             btn.style.marginLeft = '0';
-            
-            // Lấy kích thước của vùng giới hạn (Game Area)
-            const containerRect = gameArea.getBoundingClientRect();
-            const btnRect = btn.getBoundingClientRect();
-            
-            // Tính toán giới hạn (trừ hao kích thước nút)
-            // Dùng offsetWidth/Height để lấy kích thước thật của container
-            const maxX = gameArea.offsetWidth - btn.offsetWidth - 20; // Trừ lề 20px
+            const maxX = gameArea.offsetWidth - btn.offsetWidth - 20; 
             const maxY = gameArea.offsetHeight - btn.offsetHeight - 20;
-            
-            // Random vị trí mới
             const newX = Math.random() * maxX;
             const newY = Math.random() * maxY;
             
-            // Gán vị trí mới (Absolute so với game-area)
             btn.style.left = `${Math.max(10, newX)}px`;
             btn.style.top = `${Math.max(10, newY)}px`;
         }
 
+        // --- LUỒNG CHÍNH KHI ĐỒNG Ý YÊU ---
         function acceptLove() {
             fireConfetti();
             const btn = document.querySelector('button[onclick="acceptLove()"]');
             btn.innerText = "Anh cũng yêu emmmm! ❤️";
             btn.classList.add('bg-pink-600');
+            
+            document.body.style.background = "linear-gradient(135deg, #ffe4e6, #fecdd3)";
+            setTimeout(() => {
+                document.body.style.background = ""; 
+            }, 2000);
+
+            // Bật thông báo
             Swal.fire({
-                title: 'Yayyyy! 🎉',
-                text: 'Hẹn em 7h tối nay đi ăn ngon nhé!',
+                title: 'Anh biết ngay mà! 🎉',
+                text: 'Kéo xuống dưới để nhận quà đặc biệt của anh nhé!',
                 icon: 'success',
                 confirmButtonColor: '#ec4899'
+            }).then(() => {
+                // Sau khi tắt thông báo thì hiện Voucher
+                const couponSec = document.getElementById('coupons-section');
+                couponSec.classList.remove('hidden-content');
+                couponSec.classList.add('show-content');
+                
+                // Trượt mượt mà xuống phần Voucher
+                setTimeout(() => {
+                    couponSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
             });
+            
             for(let i=0; i<10; i++) setTimeout(fireConfetti, i*200);
+        }
+
+        // --- CLAIM VOUCHER (Ý 1) ---
+        function claimCoupon(element, name) {
+            // Nếu đã lưu rồi thì bỏ qua
+            if(element.classList.contains('claimed')) return;
+            
+            fireConfetti();
+            element.classList.add('claimed', 'bg-pink-50', 'opacity-60');
+            
+            // Thêm con dấu "ĐÃ LƯU" dán đè lên
+            element.innerHTML += `
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="border-4 border-pink-500 text-pink-500 font-black text-2xl uppercase py-1 px-4 transform -rotate-12 rounded-lg bg-white/80 shadow-lg">
+                        ĐÃ LƯU
+                    </div>
+                </div>`;
+
+            // Thông báo lưu thành công
+            Swal.fire({
+                title: `Lưu thành công!`,
+                html: `Voucher <b>${name}</b> đã vào ví em.<br>Nhớ chụp màn hình lại bắt đền anh nha! 💖`,
+                icon: 'success',
+                confirmButtonColor: '#ec4899',
+                backdrop: `rgba(0,0,0,0.4)`
+            });
         }
 
         function fireConfetti() {
