@@ -359,13 +359,12 @@ Và cả những ngày sau nữa. ❤️`;
         function toggleMusic() {
             const audio = document.getElementById('bg-music');
             const icon = document.getElementById('music-icon');
-            
+        
             if (audio.paused) {
                 audio.volume = 0;
                 audio.play().then(() => {
                     icon.classList.remove('paused');
-                    icon.innerText = '🎵';
-            
+        
                     let fade = setInterval(() => {
                         if (audio.volume < 0.4) {
                             audio.volume += 0.02;
@@ -374,8 +373,11 @@ Và cả những ngày sau nữa. ❤️`;
                         }
                     }, 100);
                 });
+            } else {
+                audio.pause();
+                icon.classList.add('paused');
             }
-
+        }
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'l' || event.key === 'L') {
@@ -527,6 +529,7 @@ Và cả những ngày sau nữa. ❤️`;
     </script>
 </body>
 </html>
+
 
 
 
