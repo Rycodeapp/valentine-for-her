@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gửi Bảo Anh ❤️ - Valentine của anh</title>
+    <title> Gửi Bảo Anh ❤️ - Valentine của anh >.< </title>
 
-    <meta property="og:title" content="Bao Anh à, anh có điều bất ngờ cho em ❤️">
+    <meta property="og:title" content="Bao Anh à, anh có điều bất ngờ dành cho em ❤️">
     <meta property="og:description" content="Một món quà nhỏ anh làm riêng cho em nhân Valentine.">
     <meta property="og:image" content="https://rycodeapp.github.io/valentine-for-her/preview.jpg">
     <meta property="og:url" content="https://rycodeapp.github.io/valentine-for-her/">
@@ -99,10 +99,10 @@
                 <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-red-500 drop-shadow-xl filter">
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
                 </svg>
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-sm whitespace-nowrap">MỞ QUÀ 🎁</div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-sm whitespace-nowrap">MỞ ra nèe</div>
             </div>
             <h1 class="font-handwriting text-4xl md:text-6xl text-pink-600 mb-4 transition-opacity duration-500" id="intro-text">Gửi Em Yêu</h1>
-            <p class="text-gray-600 text-lg animate-pulse transition-opacity duration-500" id="intro-sub">Chạm vào trái tym để xem điều bất ngờ nhó...</p>
+            <p class="text-gray-600 text-lg animate-pulse transition-opacity duration-500" id="intro-sub">Chạm vào trái tym để xem điều bất ngờ nhó</p>
         </div>
     </div>
 
@@ -206,8 +206,8 @@
             </div>
         </div>
 
-        <audio id="bg-music" loop>
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <audio id="bg-music" loop preload="auto">
+            <source src="music.mp3" type="audio/mpeg">
         </audio>
 
     </div>
@@ -371,19 +371,20 @@ Và cả những ngày sau nữa. ❤️`;
             const icon = document.getElementById('music-icon');
             
             if (audio.paused) {
+                audio.volume = 0;
                 audio.play().then(() => {
                     icon.classList.remove('paused');
                     icon.innerText = '🎵';
-                }).catch(err => {
-                    console.log("Autoplay blocked");
-                    icon.innerText = '🔇'; 
+            
+                    let fade = setInterval(() => {
+                        if (audio.volume < 0.4) {
+                            audio.volume += 0.02;
+                        } else {
+                            clearInterval(fade);
+                        }
+                    }, 100);
                 });
-            } else {
-                audio.pause();
-                icon.classList.add('paused');
-                icon.innerText = '🔇';
             }
-        }
 
 
         document.addEventListener('keydown', function(event) {
@@ -402,6 +403,10 @@ Và cả những ngày sau nữa. ❤️`;
                 });
             }
         });
+        document.addEventListener("DOMContentLoaded", () => {
+            const audio = document.getElementById("bg-music");
+            audio.volume = 0.4; // 40% cho dịu
+        });
 
         function createHeartRain() {
             const container = document.getElementById('heart-bg');
@@ -416,17 +421,6 @@ Và cả những ngày sau nữa. ❤️`;
                 setTimeout(() => heart.remove(), 5000);
             }, 300);
         }
-
-        function updateCounter() {
-            const now = new Date();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById('days').innerText = days;
-            document.getElementById('hours').innerText = hours;
-        }
-        setInterval(updateCounter, 1000);
-        updateCounter();
 
         function updateLoveTime() {
             const startDate = new Date(2025, 6, 3);
@@ -543,5 +537,6 @@ Và cả những ngày sau nữa. ❤️`;
     </script>
 </body>
 </html>
+
 
 
