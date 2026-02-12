@@ -87,6 +87,13 @@
             transform: scale(0.95);
             pointer-events: none;
         }
+        @keyframes floatUp {
+           to {
+              transform: translateY(-100px);
+              opacity: 0;
+           }
+        }
+
     </style>
 </head>
 <body class="bg-gradient-to-br from-pink-100 via-purple-100 to-red-100 min-h-screen relative text-gray-800">
@@ -260,6 +267,20 @@ Và cả những ngày sau nữa. ❤️`;
                 lastTrailTime = Date.now();
             }
         });
+
+        document.addEventListener("click", function(e) {
+           const heart = document.createElement("div");
+           heart.innerHTML = "💖";
+           heart.style.position = "absolute";
+           heart.style.left = e.pageX + "px";
+           heart.style.top = e.pageY + "px";
+           heart.style.fontSize = "20px";
+           heart.style.animation = "floatUp 2s ease-out forwards";
+           document.body.appendChild(heart);
+        
+           setTimeout(() => heart.remove(), 2000);
+        });
+
 
         function initCarousel() {
             const track = document.getElementById('track');
@@ -549,6 +570,7 @@ Và cả những ngày sau nữa. ❤️`;
     </script>
 </body>
 </html>
+
 
 
 
