@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Người Anh Yêu</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font chữ -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Hiệu ứng pháo hoa -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- SweetAlert2 cho Popup đẹp -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            overflow-x: hidden;
+        }
+        
+        .font-handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* --- Hiệu ứng nền trái tim bay --- */
+        .heart-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .heart {
+            position: absolute; bottom: -100px;
+            background-color: rgba(255, 107, 129, 0.6);
+            display: inline-block; height: 30px; width: 30px;
+            margin: 0 10px; transform: rotate(-45deg);
+            animation: float 6s ease-in infinite;
+        }
+        .heart:before, .heart:after {
+            content: ""; background-color: inherit; border-radius: 50%;
+            height: 30px; position: absolute; width: 30px;
+        }
+        .heart:before { top: -15px; left: 0; }
+        .heart:after { left: 15px; top: 0; }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(-45deg) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Hiệu ứng Intro --- */
+        @keyframes heartbeat {
+            0% { transform: scale(1); } 14% { transform: scale(1.1); }
+            28% { transform: scale(1); } 42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+        .animate-heartbeat { animation: heartbeat 1.5s infinite; }
+        
+        .zoom-in-transition {
+            transform: scale(30);
+            opacity: 0;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s ease 1s;
+        }
+
+        /* --- Glassmorphism --- */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .hidden-content { display: none; opacity: 0; transform: translateY(50px); transition: all 1s ease-out; }
+        .show-content { display: block; opacity: 1; transform: translateY(0); }
+
+        /* --- Carousel Slide --- */
+        .carousel-track { display: flex; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); width: 100%; height: 100%; }
+        .carousel-slide { min-width: 100%; height: 100%; position: relative; }
+        .dot { transition: all 0.3s ease; width: 12px; height: 12px; background-color: #fecaca; border-radius: 9999px; }
+        .dot.active { background-color: #ef4444; width: 30px; transform: scale(1.1); }
+
+        /* --- Typing Effect Cursor --- */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+            color: #ec4899;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- Music Control --- */
+        .music-control {
+            animation: spin 4s linear infinite;
+        }
+        .paused { animation-play-state: paused; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-100 via-purple-100 to-red-100 min-h-screen relative text-gray-800">
+
+    <!-- Nền trái tim bay -->
+    <div class="heart-bg" id="heart-bg"></div>
+
+    <!-- Màn hình 1: Intro Envelope -->
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pink-50 transition-all duration-1000 overflow-hidden">
+        <div class="text-center cursor-pointer relative z-10" onclick="startJourney()">
+            <div id="intro-heart" class="relative w-32 h-32 mx-auto mb-8 animate-heartbeat transition-transform duration-1000">
+                <!-- Icon trái tim SVG -->
+                <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-red-500 drop-shadow-xl filter">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+                </svg>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-sm whitespace-nowrap">MỞ QUÀ 🎁</div>
+            </div>
+            <h1 class="font-handwriting text-4xl md:text-6xl text-pink-600 mb-4 transition-opacity duration-500" id="intro-text">Gửi Em Yêu</h1>
+            <p class="text-gray-600 text-lg animate-pulse transition-opacity duration-500" id="intro-sub">Chạm vào trái tim để xem điều bất ngờ...</p>
+        </div>
+    </div>
+
+    <!-- Nút điều khiển nhạc (Fixed) -->
+    <div class="fixed top-4 right-4 z-40">
+        <button onclick="toggleMusic()" class="bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg hover:shadow-xl transition-all border border-pink-200 group">
+            <div id="music-icon" class="text-2xl music-control paused">🎵</div>
+            <span class="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-white px-2 py-1 rounded text-xs text-pink-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-sm">
+                Our Playlist 🎶
+            </span>
+        </button>
+    </div>
+
+    <!-- Màn hình 2: Nội dung chính -->
+    <div id="main-content" class="hidden-content container mx-auto px-4 py-8 relative z-10 max-w-2xl pb-32">
+        
+        <!-- Header -->
+        <header class="text-center mb-12 mt-8">
+            <h1 class="font-handwriting text-5xl md:text-7xl text-red-500 mb-2 drop-shadow-sm">Happy Valentine's Day</h1>
+            <p class="text-xl text-pink-600 font-semibold">Chào cô gái nhỏ của anh!</p>
+        </header>
+
+        <!-- Bộ đếm ngày yêu -->
+        <div class="glass rounded-3xl p-6 mb-8 shadow-xl transform hover:scale-105 transition-transform duration-300">
+            <h2 class="text-center text-2xl font-bold text-gray-700 mb-4">Chúng mình đã bên nhau</h2>
+            <div class="flex justify-center gap-4 text-center">
+                <div class="bg-white/50 p-3 rounded-xl w-20">
+                    <span id="days" class="block text-3xl font-bold text-red-500">0</span>
+                    <span class="text-xs text-gray-500 uppercase">Ngày</span>
+                </div>
+                <div class="bg-white/50 p-3 rounded-xl w-20">
+                    <span id="hours" class="block text-3xl font-bold text-pink-500">0</span>
+                    <span class="text-xs text-gray-500 uppercase">Giờ</span>
+                </div>
+            </div>
+            <p class="text-center mt-4 text-gray-500 italic text-sm">Từng giây từng phút đều quý giá ❤️</p>
+        </div>
+
+        <!-- Carousel Ảnh -->
+        <div class="glass rounded-3xl p-4 mb-8 shadow-xl">
+            <div class="relative w-full h-64 md:h-80 rounded-2xl overflow-hidden group bg-gray-100">
+                <div class="carousel-track" id="track"></div>
+            </div>
+            <div class="flex justify-center mt-4 gap-2" id="dots-container"></div>
+        </div>
+
+        <!-- Bức thư tình (Typing Effect) -->
+        <div class="bg-white rounded-xl shadow-2xl p-8 mb-12 relative transform rotate-1 hover:rotate-0 transition-transform duration-300 border-2 border-pink-100 min-h-[300px]">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-8 bg-gray-300 rounded-full shadow-inner"></div>
+            
+            <h3 class="font-handwriting text-3xl text-gray-800 mb-6">Gửi em... <span class="text-pink-400 text-xl">(Biệt danh của em)</span></h3>
+            
+            <!-- Nội dung thư sẽ được JS gõ vào đây -->
+            <div id="letter-content" class="text-gray-600 leading-loose text-lg text-justify font-handwriting typing-cursor"></div>
+            
+            <p class="text-right mt-6 font-bold text-gray-700 opacity-0 transition-opacity duration-1000" id="signature">- Anh của em -</p>
+        </div>
+
+        <!-- Khu vực tương tác -->
+        <div class="text-center mb-16">
+            <h3 class="text-gray-500 text-sm mb-2 uppercase tracking-widest">Câu hỏi quan trọng</h3>
+            <h2 class="text-4xl font-handwriting text-pink-600 mb-8 animate-pulse">Em có yêu anh không? 🥺</h2>
+
+            <!-- GAME AREA: Container giới hạn khu vực chạy -->
+            <!-- Tăng chiều cao lên h-64 để có không gian chạy nhưng vẫn trong tầm mắt -->
+            <div id="game-area" class="relative h-64 w-full flex justify-center items-center bg-pink-50/30 rounded-3xl border border-pink-100 overflow-hidden">
+                
+                <!-- Nút Yêu -->
+                <button onclick="acceptLove()" class="absolute z-10 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-110">
+                    Yêu Anh ❤️
+                </button>
+                
+                <!-- Nút Không (Sẽ chạy trong khu vực này) -->
+                <!-- Lúc đầu để margin-left để tách ra khỏi nút Yêu -->
+                <button id="no-btn" onmouseover="moveButton()" onclick="moveButton()" class="absolute z-20 bg-gray-300 text-gray-600 font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 ml-48">
+                    Không thèm 😝
+                </button>
+            </div>
+        </div>
+
+        <!-- Góc Tương Lai & Bí Mật -->
+        <div class="mt-12 pt-8 border-t border-pink-200 text-center space-y-4 pb-8">
+            <p class="text-gray-500 italic text-sm">
+                P/s: Có một bí mật nhỏ nếu em nhấn phím <span class="font-bold text-pink-500 border border-pink-300 px-1 rounded">L</span> trên bàn phím...
+            </p>
+            <div class="opacity-60 hover:opacity-100 transition-opacity">
+                <p class="font-handwriting text-xl text-gray-400">Gửi chúng ta của năm 2027,</p>
+                <p class="text-xs text-gray-400">Nếu em đang đọc lại dòng này vào năm sau, hy vọng lúc đó anh vẫn đang nắm tay em.</p>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <audio id="bg-music" loop>
+            <!-- Thay link nhạc của 2 bạn vào đây -->
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
+
+    </div>
+
+    <!-- Script điều khiển -->
+    <script>
+        // --- CẤU HÌNH DỮ LIỆU ---
+        const startDate = new Date(2023, 1, 14); // Ngày yêu nhau
+        
+        // Nội dung thư (Dùng \n để xuống dòng)
+        const letterText = 
+`Chào em, cô gái đã đánh cắp trái tim anh.\n
+Nhân ngày Valentine, anh muốn nói rằng cảm ơn em vì đã xuất hiện. Anh nhớ lần đầu mình gặp nhau, nhớ cả cái cách em cười tít mắt khi được uống trà sữa.\n
+Anh không hứa sẽ là người hoàn hảo nhất, nhưng anh hứa sẽ là người luôn cố gắng để em cười mỗi ngày. 
+Mong rằng 365 ngày tới, ngày nào cũng là Valentine của chúng mình.\n
+Yêu em nhiều lắm! ❤️`;
+
+        const memories = [
+            { url: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Nụ cười tỏa nắng" },
+            { url: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Lần đầu đi du lịch" },
+            { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption: "Bình yên bên em" }
+        ];
+
+        let currentImageIndex = 0;
+        let isTyping = false;
+        let audioPlaying = false;
+
+        // --- INIT ---
+        function initCarousel() {
+            const track = document.getElementById('track');
+            const dotsContainer = document.getElementById('dots-container');
+            track.innerHTML = ''; dotsContainer.innerHTML = '';
+
+            memories.forEach((memory, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.innerHTML = `
+                    <img src="${memory.url}" class="w-full h-full object-cover" alt="Memory">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
+                        <p class="text-white text-center font-handwriting text-2xl drop-shadow-md">${memory.caption}</p>
+                    </div>`;
+                track.appendChild(slide);
+
+                const dot = document.createElement('button');
+                dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(index);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function goToSlide(index) {
+            currentImageIndex = index;
+            document.getElementById('track').style.transform = `translateX(-${index * 100}%)`;
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.className = `dot ${i === index ? 'active' : ''}`;
+            });
+        }
+
+        // --- ACTIONS ---
+        function startJourney() {
+            const introHeart = document.getElementById('intro-heart');
+            const introText = document.getElementById('intro-text');
+            const introSub = document.getElementById('intro-sub');
+            const introScreen = document.getElementById('intro-screen');
+            const main = document.getElementById('main-content');
+
+            // 1. Hiệu ứng Zoom In Intro
+            introText.style.opacity = '0';
+            introSub.style.opacity = '0';
+            introHeart.classList.remove('animate-heartbeat');
+            introHeart.classList.add('zoom-in-transition');
+
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+                main.classList.remove('hidden-content');
+                main.classList.add('show-content');
+                
+                initCarousel();
+                fireConfetti();
+                createHeartRain();
+                
+                // Bắt đầu gõ thư sau khi vào màn hình chính 1 chút
+                setTimeout(typeWriter, 1000);
+                
+                // Auto play slide
+                setInterval(() => {
+                    currentImageIndex = (currentImageIndex + 1) % memories.length;
+                    goToSlide(currentImageIndex);
+                }, 3500);
+                
+                // Thử tự động phát nhạc (nếu trình duyệt cho phép)
+                toggleMusic(); 
+
+            }, 1200);
+        }
+
+        // --- TYPING EFFECT ---
+        function typeWriter() {
+            if (isTyping) return;
+            isTyping = true;
+            const container = document.getElementById('letter-content');
+            container.innerHTML = ""; // Xóa nội dung cũ
+            
+            let i = 0;
+            const speed = 50; // Tốc độ gõ (ms)
+
+            function type() {
+                if (i < letterText.length) {
+                    // Xử lý xuống dòng
+                    if (letterText.charAt(i) === '\n') {
+                        container.innerHTML += '<br>';
+                    } else {
+                        container.innerHTML += letterText.charAt(i);
+                    }
+                    i++;
+                    // Tự động cuộn xuống nếu văn bản dài
+                    // container.scrollTop = container.scrollHeight; 
+                    setTimeout(type, speed);
+                } else {
+                    // Kết thúc gõ
+                    document.getElementById('signature').style.opacity = '1';
+                    container.classList.remove('typing-cursor'); // Bỏ dấu nháy
+                }
+            }
+            type();
+        }
+
+        // --- MUSIC CONTROL ---
+        function toggleMusic() {
+            const audio = document.getElementById('bg-music');
+            const icon = document.getElementById('music-icon');
+            
+            if (audioPlaying) {
+                audio.pause();
+                icon.classList.add('paused');
+                icon.innerText = '🔇'; // Icon tắt tiếng
+            } else {
+                audio.play().then(() => {
+                    icon.classList.remove('paused');
+                    icon.innerText = '🎵';
+                    audioPlaying = true;
+                }).catch(err => {
+                    console.log("Autoplay blocked, waiting for user interaction");
+                    icon.innerText = '🔇'; // Hiện trạng thái tắt nếu bị chặn
+                });
+            }
+            audioPlaying = !audioPlaying;
+        }
+
+        // --- EASTER EGG (Phím L) ---
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'l' || event.key === 'L') {
+                Swal.fire({
+                    title: 'Bí mật nè! 🤫',
+                    text: 'Anh yêu em nhiều hơn cả trà sữa full topping! Cảm ơn em vì đã luôn ở bên anh.',
+                    imageUrl: 'https://media.giphy.com/media/26BRv0ThflsHCqDrG/giphy.gif',
+                    imageWidth: 200,
+                    imageHeight: 200,
+                    imageAlt: 'Cute heart',
+                    confirmButtonText: 'Hihi yêu anh ❤️',
+                    confirmButtonColor: '#ec4899',
+                    background: '#fff1f2',
+                    backdrop: `rgba(0,0,123,0.4) url("https://sweetalert2.github.io/images/nyan-cat.gif") left top no-repeat`
+                });
+            }
+        });
+
+        // --- UTILS ---
+        function createHeartRain() {
+            const container = document.getElementById('heart-bg');
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+                const colors = ['rgba(255, 107, 129, 0.4)', 'rgba(255, 192, 203, 0.4)', 'rgba(255, 0, 0, 0.2)'];
+                heart.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 300);
+        }
+
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('days').innerText = days;
+            document.getElementById('hours').innerText = hours;
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        function moveButton() {
+            const btn = document.getElementById('no-btn');
+            const gameArea = document.getElementById('game-area');
+            
+            // Xóa margin-left ban đầu để di chuyển tự do
+            btn.style.marginLeft = '0';
+            
+            // Lấy kích thước của vùng giới hạn (Game Area)
+            const containerRect = gameArea.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            
+            // Tính toán giới hạn (trừ hao kích thước nút)
+            // Dùng offsetWidth/Height để lấy kích thước thật của container
+            const maxX = gameArea.offsetWidth - btn.offsetWidth - 20; // Trừ lề 20px
+            const maxY = gameArea.offsetHeight - btn.offsetHeight - 20;
+            
+            // Random vị trí mới
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            
+            // Gán vị trí mới (Absolute so với game-area)
+            btn.style.left = `${Math.max(10, newX)}px`;
+            btn.style.top = `${Math.max(10, newY)}px`;
+        }
+
+        function acceptLove() {
+            fireConfetti();
+            const btn = document.querySelector('button[onclick="acceptLove()"]');
+            btn.innerText = "Anh cũng yêu emmmm! ❤️";
+            btn.classList.add('bg-pink-600');
+            Swal.fire({
+                title: 'Yayyyy! 🎉',
+                text: 'Hẹn em 7h tối nay đi ăn ngon nhé!',
+                icon: 'success',
+                confirmButtonColor: '#ec4899'
+            });
+            for(let i=0; i<10; i++) setTimeout(fireConfetti, i*200);
+        }
+
+        function fireConfetti() {
+            var count = 200;
+            var defaults = { origin: { y: 0.7 } };
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, { particleCount: Math.floor(count * particleRatio) }));
+            }
+            fire(0.25, { spread: 26, startVelocity: 55, colors: ['#ff0000', '#ffccd5'] });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+    </script>
+</body>
+</html>
